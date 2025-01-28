@@ -79,8 +79,16 @@ describe("GET /api/articles/:article_id", () => {
         expect(response.body.err).toBe("Not found");
       });
   });
+  test("id not a number", () => {
+    return request(app)
+      .get("/api/articles/A")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.error).toBe("Bad Request");
+      });
+  });
 });
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("responds with array of article objects", () => {
     return request(app)
       .get("/api/articles")
