@@ -45,8 +45,39 @@ describe("GET /api/topics", () => {
       .expect(404)
       .then((response) => {
         const body = response.body;
-        console.log(body);
         expect(body.message).toEqual("Endpoint not found");
+      });
+  });
+});
+describe("GET /api/articles/:article_id", () => {
+  test("should respond with correct article", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+        console.log(body);
+        expect(body.article).toEqual({
+          article_id: 1,
+          author: "butter_bridge",
+          title: "Living in the shadow of a great man",
+          body: "I find this existence challenging",
+          topic: "mitch",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+
+  test("article not found", () => {
+    return request(app)
+      .get("/api/articles/30")
+      .expect(404)
+      .then((response) => {
+        console.log(response);
+        expect(response.body.err).toBe("Not found");
       });
   });
 });
