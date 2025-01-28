@@ -56,7 +56,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const body = response.body;
-        console.log(body);
+
         expect(body.article).toEqual({
           article_id: 1,
           author: "butter_bridge",
@@ -76,7 +76,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/30")
       .expect(404)
       .then((response) => {
-        console.log(response);
         expect(response.body.err).toBe("Not found");
       });
   });
