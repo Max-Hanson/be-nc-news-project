@@ -80,3 +80,46 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+describe.only("GET /api/articles", () => {
+  test("responds with array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+
+        expect(body.articles.length).toEqual(13);
+        body.articles.forEach((article) => {
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+  test("should respond with articles ordered by date", () => {
+    return request(app)
+      .get("/api/articles?&sort_by=created_at&order=desc")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+        expect(body.articles.length).toEqual(13);
+
+        expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("should respond with error message if endpoint not found", () => {
+    return request(app)
+      .get("/api/incorrectendpoint")
+      .expect(404)
+      .then((response) => {
+        const body = response.body;
+        expect(body.message).toEqual("Endpoint not found");
+      });
+  });
+});
