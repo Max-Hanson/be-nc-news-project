@@ -4,9 +4,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require("../db/data/test-data/index");
-/* Set up your test imports here */
 
-/* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
   return seed(testData);
 });
@@ -128,6 +126,51 @@ describe("GET /api/articles", () => {
       .then((response) => {
         const body = response.body;
         expect(body.message).toEqual("Endpoint not found");
+      });
+  });
+});
+describe.only("GET /api/articles/:article_id/comments", () => {
+  test("should respond with array of comments given an article", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+
+        expect(body.comments.length).toEqual(2);
+        body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+        });
+      });
+  });
+  test("should respond with most recent comments first", () => {
+    return request(app)
+      .get("/api/articles/9/comments?&sort_by=created_at&order=desc")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("article not found", () => {
+    return request(app)
+      .get("/api/articles/30")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.err).toBe("Not found");
+      });
+  });
+  test("id not a number", () => {
+    return request(app)
+      .get("/api/articles/A")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.error).toBe("Bad Request");
       });
   });
 });

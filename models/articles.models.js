@@ -40,4 +40,14 @@ const fetchArticles = () => {
       return res.rows;
     });
 };
-module.exports = { fetchArticleById, fetchArticles };
+const fetchCommentbyArticleId = (id) => {
+  return db
+    .query(
+      `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
+      [id]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+module.exports = { fetchArticleById, fetchArticles, fetchCommentbyArticleId };
