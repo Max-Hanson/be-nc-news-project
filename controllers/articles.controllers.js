@@ -2,6 +2,7 @@ const {
   fetchArticleById,
   fetchArticles,
   fetchCommentbyArticleId,
+  addComment,
 } = require("../models/articles.models");
 
 const getArticleById = (req, res, next) => {
@@ -25,4 +26,22 @@ const getCommentByArticleId = (req, res) => {
     res.status(200).send({ comments });
   });
 };
-module.exports = { getArticleById, getArticles, getCommentByArticleId };
+const postComment = (req, res) => {
+  const { article_id } = req.params;
+  const { author, body } = req.body;
+
+  const newComment = { article_id, author, body };
+  if (!author || !body) {
+    return res.status(400).send({ message: "Bad Request" });
+  } else {
+    addComment(newComment).then(() => {
+      res.status(201).send({ comment: newComment });
+    });
+  }
+};
+module.exports = {
+  getArticleById,
+  getArticles,
+  getCommentByArticleId,
+  postComment,
+};
