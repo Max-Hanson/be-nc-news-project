@@ -174,7 +174,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
-describe.only("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("should respond with a posted comment", () => {
     return request(app)
       .post("/api/articles/2/comments")
@@ -202,6 +202,48 @@ describe.only("POST /api/articles/:article_id/comments", () => {
       .send({})
       .then((response) => {
         expect(response.body.message).toEqual("Bad Request");
+      });
+  });
+});
+describe("PATCH /api/articles/:article_id", () => {
+  test("should respond with updated votes", () => {
+    const newVotes = { inc_votes: -50 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVotes)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.votes).toEqual(50);
+      });
+  });
+  test("should respond with article not found", () => {
+    const newVotes = { inc_votes: -50 };
+    return request(app)
+      .patch("/api/articles/6060")
+      .send(newVotes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.message).toBe("Article not found");
+      });
+  });
+  test("should return 400 if id not valid", () => {
+    const newVotes = { inc_votes: -50 };
+    return request(app)
+      .patch("/api/articles/a")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.message).toBe("Invalid article id");
+      });
+  });
+  test("should return error if inc_votes is invalid", () => {
+    const newVotes = { inc_votes: "fifty" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.message).toBe("Bad Request");
       });
   });
 });
