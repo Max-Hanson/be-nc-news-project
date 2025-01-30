@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchCommentbyArticleId,
   addComment,
+  updateVotes,
 } = require("../models/articles.models");
 
 const getArticleById = (req, res, next) => {
@@ -39,9 +40,33 @@ const postComment = (req, res) => {
     });
   }
 };
+const updateArticle = (req, res) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (isNaN(inc_votes)) {
+    return res.status(400).send({ message: "Bad Request" });
+  }
+  if (isNaN(article_id)) {
+    return res.status(400).send({ message: "Invalid article id" });
+  }
+  updateVotes(article_id, inc_votes)
+    .then((rows) => {
+      if (rows.length === 0) {
+        return res.status(404).send({ message: "Article not found" });
+      } else {
+        res.status(200).send(rows[0]);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: "internal server error" });
+    });
+};
 module.exports = {
   getArticleById,
   getArticles,
   getCommentByArticleId,
   postComment,
+  updateArticle,
 };
