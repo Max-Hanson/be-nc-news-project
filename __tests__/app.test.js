@@ -129,7 +129,7 @@ describe("GET /api/articles", () => {
       });
   });
 });
-describe.only("GET /api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   test("should respond with array of comments given an article", () => {
     return request(app)
       .get("/api/articles/9/comments")
@@ -171,6 +171,37 @@ describe.only("GET /api/articles/:article_id/comments", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.error).toBe("Bad Request");
+      });
+  });
+});
+describe.only("POST /api/articles/:article_id/comments", () => {
+  test("should respond with a posted comment", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        author: "butter_bridge",
+        body: "new comment",
+      })
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment.author).toBe("butter_bridge");
+      });
+  });
+  test("should respond with 404 if no article_id", () => {
+    return request(app)
+      .post("/api/articles//comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.message).toEqual("Endpoint not found");
+      });
+  });
+  test("respond with 400 if there is no username or body", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .expect(400)
+      .send({})
+      .then((response) => {
+        expect(response.body.message).toEqual("Bad Request");
       });
   });
 });

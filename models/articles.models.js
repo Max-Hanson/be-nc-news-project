@@ -50,4 +50,23 @@ const fetchCommentbyArticleId = (id) => {
       return rows;
     });
 };
-module.exports = { fetchArticleById, fetchArticles, fetchCommentbyArticleId };
+const addComment = (newComment) => {
+  const { article_id, author, body } = newComment;
+
+  return db
+    .query(
+      `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *`,
+      [article_id, author, body]
+    )
+
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+module.exports = {
+  fetchArticleById,
+  fetchArticles,
+  fetchCommentbyArticleId,
+  addComment,
+};
