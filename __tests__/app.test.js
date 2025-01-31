@@ -4,6 +4,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require("../db/data/test-data/index");
+const users = require("../db/data/test-data/users");
 
 beforeEach(() => {
   return seed(testData);
@@ -270,6 +271,31 @@ describe("DELETE /api/comments/comment_id", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.message).toBe("Comment not found");
+      });
+  });
+});
+describe("GET /api/users", () => {
+  test("should respond with array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const body = response.body;
+        expect(body.users.length).toBe(4);
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
+      });
+  });
+  test("should respond with error message if endpoint not found", () => {
+    return request(app)
+      .get("/api/incorrectendpoint")
+      .expect(404)
+      .then((response) => {
+        const body = response.body;
+        expect(body.message).toEqual("Endpoint not found");
       });
   });
 });
