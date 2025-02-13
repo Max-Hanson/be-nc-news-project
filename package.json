@@ -29,9 +29,9 @@
     "pg-format": "^1.0.4"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.4.7",
     "jest-sorted": "^1.0.15",
-    "pg": "^8.13.1",
+    "pg": "^8.13.3",
     "supertest": "^7.0.0"
   },
   "jest": {
