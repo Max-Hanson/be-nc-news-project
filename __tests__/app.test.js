@@ -299,3 +299,11 @@ describe("GET /api/users", () => {
       });
   });
 });
+describe("GET /api/articles(sorting queries)", () => {
+  test("should accept the given queries", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {});
+  });
+});
