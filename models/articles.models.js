@@ -76,11 +76,20 @@ const updateVotes = (article_id, inc_votes) => {
       return rows;
     });
 };
-
+const sortArticles = (sort_by, order) => {
+  return db
+    .query(
+      `SELECT * FROM articles
+    ORDER BY ${sort_by} ${order};
+  `
+    )
+    .then(({ rows }) => rows);
+};
 module.exports = {
   fetchArticleById,
   fetchArticles,
   fetchCommentbyArticleId,
   addComment,
   updateVotes,
+  sortArticles,
 };

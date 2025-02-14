@@ -8,6 +8,7 @@ const {
   getCommentByArticleId,
   postComment,
   updateArticle,
+  getSortedArticles,
 } = require("./controllers/articles.controllers");
 const deleteComment = require("./controllers/comments.controllers");
 const getUsers = require("./controllers/users.controllers");
@@ -33,6 +34,8 @@ app.patch("/api/articles/:article_id", updateArticle);
 app.delete("/api/comments/:comment_id", deleteComment);
 
 app.get("/api/users", getUsers);
+
+app.get("/api/articles", getSortedArticles);
 
 app.use((req, res) => {
   res.status(404).send({ message: "Endpoint not found" });

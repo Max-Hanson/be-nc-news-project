@@ -299,11 +299,27 @@ describe("GET /api/users", () => {
       });
   });
 });
-describe("GET /api/articles(sorting queries)", () => {
+describe.only("GET /api/articles(sorting queries)", () => {
   test("should accept the given queries", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
-      .then((response) => {});
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
   });
+  // test("should accept the given queries", () => {
+  //   return request(app)
+  //     .get("/api/articles?&sort_by=title&order=asc")
+  //     .expect(200)
+  //     .then((response) => {
+  //       console.log(response.body.articles);
+
+  //       expect(response.body.articles).toBeSortedBy("title", {
+  //         descending: false,
+  //       });
+  //     });
+  // });
 });

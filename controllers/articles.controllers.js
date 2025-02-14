@@ -63,10 +63,18 @@ const updateArticle = (req, res) => {
       res.status(500).send({ message: "internal server error" });
     });
 };
+const getSortedArticles = (req, res, next) => {
+  const { sort_by, order } = req.query;
+  sortArticles(sort_by, order).then(() => {
+    return res.status(200).send({ articles });
+  });
+};
+
 module.exports = {
   getArticleById,
   getArticles,
   getCommentByArticleId,
   postComment,
   updateArticle,
+  getSortedArticles,
 };
