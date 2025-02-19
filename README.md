@@ -4,7 +4,7 @@ For instructions on how to set up the enviornment please see https://l2c.northco
 
 ---
 
-Link to hosted version: https://nc-news-opsa.onrender.com
+Link to hosted version: https://nc-news-quw0.onrender.com
 
 This app will load articles written by different users across the internet
 

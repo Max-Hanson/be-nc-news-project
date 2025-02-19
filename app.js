@@ -14,6 +14,8 @@ const deleteComment = require("./controllers/comments.controllers");
 const getUsers = require("./controllers/users.controllers");
 const cors = require("cors");
 
+app.use(cors());
+
 app.use(express.json());
 
 app.get("/api", (req, res) => {
@@ -37,8 +39,6 @@ app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
 
 app.get("/api/articles", getSortedArticles);
-
-app.use(cors());
 
 app.use((req, res) => {
   res.status(404).send({ message: "Endpoint not found" });
